@@ -5,3 +5,14 @@ development:
   database: student_portal_db
   username: root
   password: root
+
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  database: student_portal_db
+  username: root
+  password: root
+
+  
