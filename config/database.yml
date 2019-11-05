@@ -4,4 +4,4 @@ development:
   pool: 5
   database: student_portal_db
   username: root
-  password: vijayroot
+  password: root

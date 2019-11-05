@@ -1,0 +1,17 @@
+<h1>Login to student portal</h1>
+	
+	<%= form_for(:create_login, url: homes_create_login_path) do |f| %>
+	<dv class="field">
+   <%= f.label :email %><br>
+   <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :password %><br>
+    <%= f.text_field :password %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Login" %>
+  </div>
+<% end %>
+
+<%= link_to "Register now", new_user_path %>

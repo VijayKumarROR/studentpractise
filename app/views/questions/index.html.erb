@@ -1,0 +1,144 @@
+<style type="text/css">
+	.parsley-errors-list{
+		color: red;
+	}
+</style>
+
+<h1>Welcome</h1>
+
+<% if @skip_answers.present? %>
+	<p>Skip Questions count:<a class="skip_count"><%= @skip_answers %></a></p>
+<% end 
+%>
+<% if @skip_answers > 0 %>
+<p>To answer the skip question, click here <a class="unskip">Show skip questions</a></p>
+<% end %>
+
+<% if @ques.present? %>
+<%= form_for(:create_answer, url: questions_create_answer_path , :html => {"data-parsley-validate" => true}) do |f| %>
+	<div class="row choose-order">
+		<div class="col-sm-6">
+			<%= f.select :exam_id, options_for_select(Exam.all.order('name ASC').collect{|c| [c.name, c.id]}), {:include_blank => false, :prompt => "Select your Exam"}, class: "select-exam" ,"data-parsley-required" => true %>
+		</div>
+		<div class="col-sm-6">
+			<%= f.select :subject_id, {}, {:include_blank => false, :prompt => "Select your Subject"}, class: "load-subject"  ,"data-parsley-required" => true %>
+		</div>
+		<div class="col-sm-6">
+			<%= f.select :chapter_id, {}, {:include_blank => false, :prompt => "Select your Subject"}, class: "load-subject"  ,"data-parsley-required" => true %>
+		</div>
+		<div class="col-sm-6">
+			<p>test</p>
+		</div>
+	</div>
+	
+	<div class="row">
+	<% @ques.each_with_index do |q, index| %>
+	<div class="ques_<%= q.id %>">
+		<p><%= index+1 %>) <%= q.name %></p>
+
+	<p>Select your answer:</p>
+		<% q.answer.each do |qa| %>
+			<input type="radio" name="create_answer[<%= q.id %>]" value="<%= qa.id %>" data-parsley-required="true" data-parsley-required-message="Please answer for this question"><%= qa.key_answer %><br>		
+		<% end %>
+		<a class="skip" data-val="<%= q.id %>">Skip this question</a>
+	</div>
+	<% end %>
+	<%= f.submit "Submit", class: "btn" %>
+	</div>
+<% end %>
+<% end %>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.skip').click(function(){
+			var ques_id = $(this).data('val');
+			$.ajax({
+				url: '<%= questions_skip_question_path %>',
+				type: 'post',
+				dataType: 'script',
+				data: {ques: ques_id},
+				success:function(data){
+					console.log(data["status"])
+					if(data["status"]){
+						$('.ques_'+ques_id).hide();
+						$('.skip_count').html()
+					}
+				}
+			})
+		})
+
+	$('.unskip').click(function(){
+		$.ajax({
+				url: '<%= questions_skip_question_path %>',
+				type: 'post',
+				dataType: 'script',
+				data: {unskip: true},
+				success:function(data){
+					if(data){						
+					}
+				}
+			})
+	})
+
+	$('.select-exam').on('change', function(){
+		alert('v')
+		var exam = $(this).val();
+		$.ajax({
+			url: '<%= questions_update_subject_path %>',
+			type: 'post',
+			dataType: 'json',
+			data: {exam_id: exam},
+			success:function(data){
+			  $('.load-subject').empty();     
+	     $('.load-subject').append(
+	       $("<option></option>")
+	       .attr("value","")
+	       .text("Select Subcategory")
+	       );
+	     $.each(data, function( key, value ) {
+	     	console.log(value.id)	     	
+	       $('.load-subject').append(
+	         $("<option></option>")
+	         .attr("value", value.id)
+	         .text(value.name)
+	         );
+	     });     
+	   	},
+	   	error: function() {
+	    	alert("Please Select Exam")
+	  	}							
+		})
+	})
+
+	$('.load-subject').on('change', function(){
+		alert('v')
+		var sub = $(this).val();
+		$.ajax({
+			url: '<%= questions_update_topics_path %>',
+			type: 'post',
+			dataType: 'json',
+			data: {sub_id: sub},
+			success:function(data){
+			  $('.load-subject').empty();     
+	     $('.load-subject').append(
+	       $("<option></option>")
+	       .attr("value","")
+	       .text("Select Subcategory")
+	       );
+	     $.each(data, function( key, value ) {
+	     	console.log(value.id)	     	
+	       $('.load-subject').append(
+	         $("<option></option>")
+	         .attr("value", value.id)
+	         .text(value.name)
+	         );
+	     });     
+	   	},
+	   	error: function() {
+	    	alert("Please Select Exam")
+	  	}							
+		})
+	})
+
+	})
+</script>

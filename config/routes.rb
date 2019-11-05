@@ -3,6 +3,15 @@ Rails.application.routes.draw do
   resources :users
   resources :questions
   resources :homes
+
+  match "homes/create_login" => "homes#create_login", via: [:post]
+  match "questions/list_question" => "questions#list_question", as: :list_question, via: [:get]
+  match "homes/logout" => "homes#logout", via: [:post]
+  match "questions/create_answer" => "questions#create_answer", via: [:post]
+  match "questions/skip_question" => "questions#skip_question", via: [:post]
+  match "questions/update_subject" => "questions#update_subject", via: [:post]
+  match "questions/update_topics" => "questions#update_topics", via: [:post]
+  match "questions/update_chapters" => "questions#update_chapters", via: [:post]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -18,7 +27,7 @@ Rails.application.routes.draw do
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
-  # Example resource route with options:
+  # Example r/esource route with options:
   #   resources :products do
   #     member do
   #       get 'short'

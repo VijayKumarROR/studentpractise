@@ -11,7 +11,57 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191103055000) do
+ActiveRecord::Schema.define(version: 20191103165351) do
+
+  create_table "answered_questions", force: :cascade do |t|
+    t.integer  "question_id", limit: 4
+    t.integer  "answer_id",   limit: 4
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.integer  "user_id",     limit: 4
+  end
+
+  create_table "answers", force: :cascade do |t|
+    t.text     "key_answer",  limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "question_id", limit: 4
+  end
+
+  create_table "chapters", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.integer  "topic_id",   limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "exams", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "questions", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.integer  "chapter_id", limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "status",     limit: 255
+  end
+
+  create_table "subjects", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.integer  "exam_id",    limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "topics", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.integer  "subject_id", limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                 limit: 255
