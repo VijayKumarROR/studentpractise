@@ -22,7 +22,7 @@
   </div>
   <div class="field">
     <%= f.label :password_confirmation %><br>
-    <%= f.text_field :password_confirmation, "data-parsley-required" => "true", "data-parsley-equalto" =>".password", "data-parsley-equalto-message" => "Confirm password should be same as password", "data-parsley-required-message" => "Please enter your confirm password" %>
+    <%= f.text_field :password_confirmation, "data-parsley-required" => "true", "data-parsley-equalto" =>"#user_password", "data-parsley-equalto-message" => "Confirm password should be same as password", "data-parsley-required-message" => "Please enter your confirm password" %>
   </div>
   <div class="actions">
     <%= f.submit "Singup", :class => "btn-a" %>

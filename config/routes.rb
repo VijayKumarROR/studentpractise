@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   match "questions/update_topics" => "questions#update_topics", via: [:post]
   match "questions/update_chapters" => "questions#update_chapters", via: [:post]
   match "questions/show_questions" => "questions#show_questions", via: [:post]
+  match "questions/clear_datas" => "questions#clear_datas", via: [:post]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

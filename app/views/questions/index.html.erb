@@ -20,6 +20,18 @@
 	.alert alert-info{
 		color: green;
 	}
+	.clear-dt{
+	margin: 10px 0px;
+	padding: 6px 12px;
+    background: #4a71ff;
+    border-radius: 4px;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: none;
+    border: 1px solid #4a71fe;
+	}
 </style>
 
 
@@ -49,7 +61,9 @@
 <% end %>
 <% end %>
 
-<p><%= link_to "Signout", homes_logout_path, method: :post %></p>
+<p><b>NOTE:</b> To clear this user exam datas, click <%= link_to "Clear records", questions_clear_datas_path, :class => "clear-dt", method: :post %> else login as a new user.</p>
+
+<p><%= link_to "Signout", homes_logout_path, method: :post, :class => "btn-a" %></p>
 </div>
 
 <script type="text/javascript">

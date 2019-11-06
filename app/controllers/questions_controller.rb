@@ -82,6 +82,13 @@ class QuestionsController < ApplicationController
 		end
 	end
 
+	def clear_datas
+		get_user
+		AnsweredQuestion.where(user_id: @user.id).destroy_all
+		flash[:notice] = "Records has been cleared"
+		redirect_to :back
+	end
+
 	private
 
 	def get_user

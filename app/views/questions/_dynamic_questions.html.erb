@@ -59,11 +59,11 @@
 		<%= submit_tag "Submit", class: "btn save-answer" %>
 	<% else %>
 			<% if @chapter_have_ques.questions.present? && !@ques.present? && !@skipped.present? %>
-				<p>All questions has been answered, check other chapters</p>
+				<p style="color: green;">All questions has been answered, check other chapters</p>
 			<% elsif (@chapter_have_ques.questions.present?) && (@questions.question_ids == @skipped) || (!@ques.present? && @not_answered.present?) %>
-				<p>Skipped questions you can see! Once you answered other chapter's questions</p>	
+				<p style="color: red;">Skipped questions you can see! Once you answered other chapter's questions</p>	
 			<% else %>
-				<p>No questions are added for this chapter</p>
+				<p style="color: green;">No questions are added for this chapter</p>
 			<% end %>
 	<% end %>
 </div>
