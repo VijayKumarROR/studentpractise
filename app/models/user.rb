@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
 	has_many :answered_questions
-	validates :email, presence: true
+	validates :email, presence: true, uniqueness: true
 	validates :password, presence: true
-	validates :password_confirmation, presence: true
+	validates :password_confirmation, presence: true, confirmation: true
 	serialize :unseen_ids, Array
 
 	def correct_answer(exam, subject, topic, chapter)
