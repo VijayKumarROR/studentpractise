@@ -7,12 +7,21 @@ class QuestionsController < ApplicationController
 		@attend = AnsweredQuestion.where('answer_id !=? AND user_id=?', nil, @user.id).pluck(:question_id)
 		@ques = Question.where.not(id: [@skiped, @attend]).first(4)
 		@ans = Answer.all.order('created_at ASC')
-		@skip_answers = AnsweredQuestion.where(answer_id: nil, user_id: @user.id ).count
+		@wrong = 
+		@skip_answers = AnsweredQuestion.where(answer_id: nil, user_id: @user.id)
+		@wrongs = AnsweredQuestion.where(user_id: @user.id, is_correct: 'false')		
+		unless @user.unseen_ids.count == Question.all.ids.count
+			@user.unseen_ids = Question.all.ids
+			@user.unseen_ids.uniq
+			@user.save
+		end
 	end
 
-	def create_answer
+	def create_answer		
 		params[:create_answer].each do |cc|
-			ans_ques = AnsweredQuestion.create(question_id: cc.first, answer_id: cc.last)
+			correct_or_no = Key.find_by(question_id: cc.first, answer_id: cc.last) ? 'true' : 'false'
+			ans_ques = AnsweredQuestion.create(question_id: cc.first, answer_id: cc.last, exam_id: params[:exam_id], subject_id: params[:sub_id], topic_id: params[:topic_id], chapter_id: params[:chapter_id], user_id: params[:user_id], is_correct: correct_or_no)
+			AnsweredQuestion.find_by(question_id: cc.first, answer_id: nil, user_id: @user.id).try(:delete)
 		end
 		flash[:notice] = "Answered successfully"
 		redirect_to :back
@@ -22,9 +31,8 @@ class QuestionsController < ApplicationController
 		get_user
 		ques = Question.find_by_id params[:ques]
 		if params[:ques].present? && !params[:unskip].present?
-			AnsweredQuestion.create(question_id: ques.id, user_id: @user.id)
-			status = true
-			#skip_count = AnsweredQuestion.create(question_id: ques.id, user_id: @user.id)
+			AnsweredQuestion.find_or_create_by(question_id: ques.id, user_id: @user.id, exam_id: params[:exam], subject_id: params[:sub], topic_id: params[:topic], chapter_id: params[:chapter])
+			status = true			
 		elsif !params[:ques].present? && params[:unskip].present?
 			destroy_ids = AnsweredQuestion.where(answer_id: nil, user_id: @user.id).ids
 			AnsweredQuestion.destroy(destroy_ids)
@@ -32,7 +40,8 @@ class QuestionsController < ApplicationController
 		else
 			status = false
 		end
-		render json: {status: status}
+		@skip_count = AnsweredQuestion.where(user_id: @user.id, answer_id: nil).count
+		render json: {status: status, skip_count: @skip_count}
 	end
 
 	def update_subject
@@ -55,8 +64,18 @@ class QuestionsController < ApplicationController
 
 	def show_questions
 		get_user
-		@ques = Answerkey.find_by(exam_id:params[:exam],subject_id:params[:subject],topic_id:params[:topic],chapter_id:params[:chapter])
-		binding.pry
+		@questions = Answerkey.find_by(exam_id:params[:exam],subject_id:params[:subject],topic_id:params[:topic],chapter_id:params[:chapter])
+		@get_answered_question = AnsweredQuestion.where(question_id: @questions.try(:question_ids), user_id: @user.id).where.not(answer_id: nil).pluck(:question_id)
+		@skipped = AnsweredQuestion.where(user_id: @user.id, answer_id: nil, chapter_id: params[:chapter]).pluck(:question_id)
+		@not_answered = @questions.try(:question_ids) - @get_answered_question if @questions.try(:question_ids).present?
+		if @user.answered_questions.count == Question.all.count
+			@ques = Question.where.not(id:@get_answered_question).where(chapter_id: params[:chapter])
+		else
+			@ques = Question.where.not(id:@skipped+@get_answered_question).where(chapter_id: params[:chapter])
+		end			
+		@chapter_have_ques = Chapter.find_by_id(params[:chapter])
+		@user.unseen_ids - @chapter_have_ques.questions
+		@user.save
 		respond_to do |format|
 			format.html
 			format.js

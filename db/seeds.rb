@@ -1,11 +1,3 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
-
 Exam.destroy_all
 
 Exam.create([
@@ -75,4 +67,20 @@ Answer.create([
 
 Answerkey.destroy_all
 
-Answerkey.create(exam_id: 1, subject_id: 1, topic_id: 1, chapter_id: 1, question_ids: [1,2,3,5,6,7])
+Answerkey.create(id:1,exam_id: 1, subject_id: 1, topic_id: 1, chapter_id: 1, question_ids: [1,2,3,5,6,7])
+
+Answerkey.create(id:2,exam_id: 1, subject_id: 1, topic_id: 2, chapter_id: 2, question_ids: [4])
+Answerkey.create(id:3,exam_id: 1, subject_id: 1, topic_id: 2, chapter_id: 3, question_ids: [])
+Answerkey.create(id:4,exam_id: 1, subject_id: 1, topic_id: 2, chapter_id: 4, question_ids: [8,9,10])
+
+Key.destroy_all
+Key.create(id: 1, question_id: 1, answer_id: 2)
+Key.create(id: 2, question_id: 2, answer_id: 3)
+Key.create(id: 3, question_id: 3, answer_id: 6)
+Key.create(id: 4, question_id: 4, answer_id: 7)
+Key.create(id: 5, question_id: 5, answer_id: 9)
+Key.create(id: 6, question_id: 6, answer_id: 12)
+Key.create(id: 7, question_id: 7, answer_id: 14)
+Key.create(id: 8, question_id: 8, answer_id: 16)
+Key.create(id: 9, question_id: 9, answer_id: 18)
+Key.create(id: 10, question_id: 10, answer_id: 19)

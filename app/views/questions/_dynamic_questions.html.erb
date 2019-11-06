@@ -1,14 +1,95 @@
-<div class="row">
-	<% @ques.each_with_index do |q, index| %>
-	<div class="ques_<%= q.id %>">
-		<p><%= index+1 %>) <%= q.name %></p>
-
-	<p>Select your answer:</p>
-		<% q.answer.each do |qa| %>
-			<input type="radio" name="create_answer[<%= q.id %>]" value="<%= qa.id %>" data-parsley-required="true" data-parsley-required-message="Please answer for this question"><%= qa.key_answer %><br>		
-		<% end %>
-		<a class="skip" data-val="<%= q.id %>">Skip this question</a>
-	</div>
-	<% end %>
-	<%= f.submit "Submit", class: "btn" %>
+<style type="text/css">
+	.skip{
+		cursor: pointer;
+	}
+	.corrections-count{
+		display: flex;		
+	}
+	.corrections-count p{
+		margin-right: 25px; 
+	}
+	.ques-list{
+		font-weight: 500px;
+		color: black;
+		font-size: 18px;
+	}
+	.skip-only a {
+		color: orange;
+    font-size: 14px;
+	}
+	.save-answer{
+	margin: 10px 0px;
+	padding: 6px 12px;
+    background: #4a71ff;
+    border-radius: 4px;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: none;
+    border: 1px solid #4a71fe;
+	}
+</style>
+<div class="corrections-count">
+<p> Correct Answer: <a class="correct_answer"><%= @user.correct_answer(params[:exam], params[:subject], params[:topic], params[:chapter]) %></a></p>
+<p>Wrong Answer: <a class="wrong_answer"><%= @user.wrong_answer(params[:exam], params[:subject], params[:topic], params[:chapter]) %></a></p>
+<p class="unseen_answer"></p>
+<p>Skip Answer: <a class="skipped_answer"><%= @user.skip_answer(params[:exam], params[:subject], params[:topic], params[:chapter])%></a></p>
 </div>
+
+<div class="row dyna-cont">
+	<% if @ques.present? %>
+		<input type="hidden" name="user_id" value="<%= @user.id %>">
+		<input type="hidden" name="exam_id" class="exam-id" value="<%= params[:exam] %>">
+		<input type="hidden" name="sub_id" class="sub-id" value="<%= params[:subject] %>">
+		<input type="hidden" name="topic_id" class="top-id" value="<%= params[:topic] %>">
+		<input type="hidden" name="chapter_id" class="chapt-id" value="<%= params[:chapter] %>">
+
+		<% @ques.each_with_index do |q, index| %>
+		<div class="ques_<%= q.id %> skip-only">
+			<p class="ques-list"><%= index+1 %>) <%= q.name %></p>
+
+		<p>Select your answer:</p>
+			<% q.answer.each do |qa| %>
+				<input type="radio" name="create_answer[<%= q.id %>]" value="<%= qa.id %>" data-parsley-required="true" data-parsley-required-message="Please answer for this question" class="remove-required_<%= q.id %>"><%= qa.key_answer %><br>		
+			<% end %><br>
+			<a class="skip skip-only" data-val="<%= q.id %>">Skip this question</a>
+		</div>
+		<% end %>
+		<%= submit_tag "Submit", class: "btn save-answer" %>
+	<% else %>
+			<% if @chapter_have_ques.questions.present? && !@ques.present? && !@skipped.present? %>
+				<p>All questions has been answered, check other chapters</p>
+			<% elsif (@chapter_have_ques.questions.present?) && (@questions.question_ids == @skipped) || (!@ques.present? && @not_answered.present?) %>
+				<p>Skipped questions you can see! Once you answered other chapter's questions</p>	
+			<% else %>
+				<p>No questions are added for this chapter</p>
+			<% end %>
+	<% end %>
+</div>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		$('.skip').click(function(){
+			var ques_id = $(this).data('val');
+			var exam = $('.select-exam').val();
+			var sub = $('.load-subject').val();
+			var topic = $('.load-topic').val();
+			var chapter = $('.load-chapter').val();
+			$.ajax({
+				url: '<%= questions_skip_question_path %>',
+				type: 'post',				
+				data: {ques: ques_id, exam: exam, sub:sub, topic:topic, chapter: chapter},
+				success:function(data){
+					console.log(data["status"])
+					$('.ques_'+ques_id).hide();
+					$('.remove-required_'+ques_id).removeAttr('data-parsley-required');
+					$('.skip_count').html(data["skip_count"]);
+				}
+			})
+		})		
+
+	})
+</script>

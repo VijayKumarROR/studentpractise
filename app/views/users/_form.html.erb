@@ -1,3 +1,4 @@
+
 <%= form_for(@user) do |f| %>
   <% if @user.errors.any? %>
     <div id="error_explanation">
@@ -24,6 +25,7 @@
     <%= f.text_field :password_confirmation %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit "Singup", :class => "btn-a" %>
   </div>
 <% end %>
+

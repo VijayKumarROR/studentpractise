@@ -1,17 +1,57 @@
-<h1>Login to student portal</h1>
-	
-	<%= form_for(:create_login, url: homes_create_login_path) do |f| %>
-	<dv class="field">
-   <%= f.label :email %><br>
-   <%= f.text_field :email %>
-  </div>
-  <div class="field">
-    <%= f.label :password %><br>
-    <%= f.text_field :password %>
-  </div>
-  <div class="actions">
-    <%= f.submit "Login" %>
-  </div>
-<% end %>
+<style>
+  .login-form{
+        display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+  }
+  .login-form .main-form{
+    width: auto;
+    height: auto;
+    background: #9ff3cc;
+    padding: 35px;
+    margin: ;
+  }
+  .btn-a{
+        padding: 6px 12px;
+    background: #fff;
+    border-radius: 4px;
+    text-align: center;
+    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: none;
+    border: 1px solid #fff;
+  }
+  .actions {
+    text-align: center;
+}
+</style>
 
-<%= link_to "Register now", new_user_path %>
+<div class="login-form">
+  <div class="main-form">
+  <h1 style="text-align: center;">Login</h1>	
+	 <%= form_for(:create_login, url: homes_create_login_path, :html => {"data-parsley-validate" => true}) do |f| %>
+	
+    <div class="field">
+     <%= f.label :email %><br>
+     <%= f.text_field :email, "data-parsley-required" => "true", "data-parsley-required-message" => "Please enter email", "data-parsley-type" => "email", "data-parsley-type-message" => "Please enter valid email" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password %><br>
+      <%= f.text_field :password, "data-parsley-required" => "true", "data-parsley-required-message" => "Please enter password" %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Login" %>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= link_to "Register now", new_user_path %>
+  </div>
+
+  </div>
+</div>

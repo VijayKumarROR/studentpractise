@@ -2,32 +2,44 @@
 	.parsley-errors-list{
 		color: red;
 	}
+	.skip_count{
+		cursor: pointer;
+	}
+	.inner-page {
+    display: flex;
+    flex-flow: column;
+    align-items: self-start;
+    padding: 45px 90px;
+	}
+	.choose-order{
+		display: flex
+	}
+	.choose-order select{
+		margin-right: 15px
+	}
+	.alert alert-info{
+		color: green;
+	}
 </style>
 
-<h1>Welcome</h1>
 
-<% if @skip_answers.present? %>
-	<p>Skip Questions count:<a class="skip_count"><%= @skip_answers %></a></p>
-<% end 
-%>
-<% if @skip_answers > 0 %>
-<p>To answer the skip question, click here <a class="unskip">Show skip questions</a></p>
-<% end %>
+<div  class="inner-page">
+<h2>Choose your Exam</h2>
 
 <% if @ques.present? %>
 <%= form_for(:create_answer, url: questions_create_answer_path , :html => {"data-parsley-validate" => true}) do |f| %>
 	<div class="row choose-order">
-		<div class="col-sm-6">
-			<%= f.select :exam_id, options_for_select(Exam.all.order('name ASC').collect{|c| [c.name, c.id]}), {:include_blank => false, :prompt => "Select your Exam"}, class: "select-exam" ,"data-parsley-required" => true %>
+		<div class="col-sm-6">			
+			<%= select_tag :exam_id, options_for_select(Exam.all.order('name ASC').collect{|c| [c.name, c.id]}), :prompt => "Select your Exam", class: "select-exam" ,"data-parsley-required" => true %>
 		</div>
 		<div class="col-sm-6">
-			<%= f.select :subject_id, {}, {:include_blank => false, :prompt => "Select your Subject"}, class: "load-subject"  ,"data-parsley-required" => true %>
+			<%= select_tag :subject_id, options_for_select([]), :prompt => "Select your Subject", class: "load-subject"  ,"data-parsley-required" => true %>
 		</div>
 		<div class="col-sm-6">
-			<%= f.select :topic_id, {}, {:include_blank => false, :prompt => "Select your Topic"}, class: "load-topic"  ,"data-parsley-required" => true %>
+			<%= select_tag :topic_id, options_for_select([]), :prompt => "Select your Topic", class: "load-topic"  ,"data-parsley-required" => true %>
 		</div>
 		<div class="col-sm-6">
-			<%= f.select :chapter_id, {}, {:include_blank => false, :prompt => "Select your Chapter"}, class: "load-chapter"  ,"data-parsley-required" => true %>
+			<%= select_tag :chapter_id, options_for_select([]), :prompt => "Select your Chapter", class: "load-chapter"  ,"data-parsley-required" => true %>
 		</div>
 	</div>
 	
@@ -37,24 +49,11 @@
 <% end %>
 <% end %>
 
+<p><%= link_to "Signout", homes_logout_path, method: :post %></p>
+</div>
+
 <script type="text/javascript">
-	$(document).ready(function(){
-		$('.skip').click(function(){
-			var ques_id = $(this).data('val');
-			$.ajax({
-				url: '<%= questions_skip_question_path %>',
-				type: 'post',
-				dataType: 'script',
-				data: {ques: ques_id},
-				success:function(data){
-					console.log(data["status"])
-					if(data["status"]){
-						$('.ques_'+ques_id).hide();
-						$('.skip_count').html()
-					}
-				}
-			})
-		})
+	$(document).ready(function(){		
 
 	$('.unskip').click(function(){
 		$.ajax({
@@ -128,12 +127,12 @@
 	})
 
 	$('.load-topic').on('change', function(){		
-		var sub = $(this).val();
+		var top = $(this).val();
 		$.ajax({
-			url: '<%= questions_update_topics_path %>',
+			url: '<%= questions_update_chapters_path %>',
 			type: 'post',
 			dataType: 'json',
-			data: {sub_id: sub},
+			data: {topic_id: top},
 			success:function(data){
 			  $('.load-chapter').empty();     
 	     $('.load-chapter').append(
@@ -171,5 +170,11 @@
 			}
 		})
 	})
+
+	$('.select-exam, .load-subject, .load-topic').on('change', function(){
+		$('.dyna-cont').find('p').text('')
+		$('.dyna-cont').html('')
+	})
+
 	})
 </script>
