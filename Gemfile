@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 gem 'carrierwave', '~> 0.9'
 
 group :production do
-	gem 'pg'
+	gem 'pg', '~> 0.11'
 end
 
 group :development do
