@@ -13,6 +13,6 @@ production:
   pool: 5
   database: student_portal_pro_db
   username: root
-  password: vijayroot
+  password: root
 
   
