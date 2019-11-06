@@ -1,0 +1,14 @@
+<div class="row">
+	<% @ques.each_with_index do |q, index| %>
+	<div class="ques_<%= q.id %>">
+		<p><%= index+1 %>) <%= q.name %></p>
+
+	<p>Select your answer:</p>
+		<% q.answer.each do |qa| %>
+			<input type="radio" name="create_answer[<%= q.id %>]" value="<%= qa.id %>" data-parsley-required="true" data-parsley-required-message="Please answer for this question"><%= qa.key_answer %><br>		
+		<% end %>
+		<a class="skip" data-val="<%= q.id %>">Skip this question</a>
+	</div>
+	<% end %>
+	<%= f.submit "Submit", class: "btn" %>
+</div>

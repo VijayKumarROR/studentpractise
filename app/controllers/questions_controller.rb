@@ -42,9 +42,25 @@ class QuestionsController < ApplicationController
 	end
 
 	def update_topics
+		subject = Subject.find_by_id(params[:sub_id])
+		topics = subject.topics if subject
+		render json: topics.to_json(only: [:id, :name])
 	end
 
 	def update_chapters
+		topic = Topic.find_by_id(params[:topic_id])
+		chapters = topic.chapters if topic
+		render json: chapters.to_json(only: [:id, :name])
+	end
+
+	def show_questions
+		get_user
+		@ques = Answerkey.find_by(exam_id:params[:exam],subject_id:params[:subject],topic_id:params[:topic],chapter_id:params[:chapter])
+		binding.pry
+		respond_to do |format|
+			format.html
+			format.js
+		end
 	end
 
 	private

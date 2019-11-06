@@ -24,26 +24,15 @@
 			<%= f.select :subject_id, {}, {:include_blank => false, :prompt => "Select your Subject"}, class: "load-subject"  ,"data-parsley-required" => true %>
 		</div>
 		<div class="col-sm-6">
-			<%= f.select :chapter_id, {}, {:include_blank => false, :prompt => "Select your Subject"}, class: "load-subject"  ,"data-parsley-required" => true %>
+			<%= f.select :topic_id, {}, {:include_blank => false, :prompt => "Select your Topic"}, class: "load-topic"  ,"data-parsley-required" => true %>
 		</div>
 		<div class="col-sm-6">
-			<p>test</p>
+			<%= f.select :chapter_id, {}, {:include_blank => false, :prompt => "Select your Chapter"}, class: "load-chapter"  ,"data-parsley-required" => true %>
 		</div>
 	</div>
 	
-	<div class="row">
-	<% @ques.each_with_index do |q, index| %>
-	<div class="ques_<%= q.id %>">
-		<p><%= index+1 %>) <%= q.name %></p>
-
-	<p>Select your answer:</p>
-		<% q.answer.each do |qa| %>
-			<input type="radio" name="create_answer[<%= q.id %>]" value="<%= qa.id %>" data-parsley-required="true" data-parsley-required-message="Please answer for this question"><%= qa.key_answer %><br>		
-		<% end %>
-		<a class="skip" data-val="<%= q.id %>">Skip this question</a>
-	</div>
-	<% end %>
-	<%= f.submit "Submit", class: "btn" %>
+	<div id="update-question">
+		
 	</div>
 <% end %>
 <% end %>
@@ -81,7 +70,6 @@
 	})
 
 	$('.select-exam').on('change', function(){
-		alert('v')
 		var exam = $(this).val();
 		$.ajax({
 			url: '<%= questions_update_subject_path %>',
@@ -93,7 +81,7 @@
 	     $('.load-subject').append(
 	       $("<option></option>")
 	       .attr("value","")
-	       .text("Select Subcategory")
+	       .text("Select your Subject")
 	       );
 	     $.each(data, function( key, value ) {
 	     	console.log(value.id)	     	
@@ -111,7 +99,6 @@
 	})
 
 	$('.load-subject').on('change', function(){
-		alert('v')
 		var sub = $(this).val();
 		$.ajax({
 			url: '<%= questions_update_topics_path %>',
@@ -119,15 +106,15 @@
 			dataType: 'json',
 			data: {sub_id: sub},
 			success:function(data){
-			  $('.load-subject').empty();     
-	     $('.load-subject').append(
+			  $('.load-topic').empty();     
+	     $('.load-topic').append(
 	       $("<option></option>")
 	       .attr("value","")
-	       .text("Select Subcategory")
+	       .text("Select your Topic")
 	       );
 	     $.each(data, function( key, value ) {
 	     	console.log(value.id)	     	
-	       $('.load-subject').append(
+	       $('.load-topic').append(
 	         $("<option></option>")
 	         .attr("value", value.id)
 	         .text(value.name)
@@ -135,10 +122,54 @@
 	     });     
 	   	},
 	   	error: function() {
-	    	alert("Please Select Exam")
+	    	alert("Please Select Subject")
 	  	}							
 		})
 	})
 
+	$('.load-topic').on('change', function(){		
+		var sub = $(this).val();
+		$.ajax({
+			url: '<%= questions_update_topics_path %>',
+			type: 'post',
+			dataType: 'json',
+			data: {sub_id: sub},
+			success:function(data){
+			  $('.load-chapter').empty();     
+	     $('.load-chapter').append(
+	       $("<option></option>")
+	       .attr("value","")
+	       .text("Select your Chapter")
+	       );
+	     $.each(data, function( key, value ) {
+	     	console.log(value.id)	     	
+	       $('.load-chapter').append(
+	         $("<option></option>")
+	         .attr("value", value.id)
+	         .text(value.name)
+	         );
+	     });     
+	   	},
+	   	error: function() {
+	    	alert("Please Select Topic")
+	  	}							
+		})
+	})
+
+	$('.load-chapter').on('change', function(){
+		var exam = $('.select-exam').val();
+		var subject = $('.load-subject').val();
+		var topic = $('.load-topic').val();
+		var chapter = $('.load-chapter').val();
+		$.ajax({
+			url: "/questions/show_questions",
+			type: 'post',
+			dataType: 'script',
+			data: {exam: exam, subject: subject, topic: topic, chapter: chapter},
+			success:function(data){
+				
+			}
+		})
+	})
 	})
 </script>

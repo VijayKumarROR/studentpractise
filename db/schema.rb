@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191103165351) do
+ActiveRecord::Schema.define(version: 20191106020819) do
 
   create_table "answered_questions", force: :cascade do |t|
     t.integer  "question_id", limit: 4
@@ -19,6 +19,20 @@ ActiveRecord::Schema.define(version: 20191103165351) do
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.integer  "user_id",     limit: 4
+    t.integer  "exam_id",     limit: 4
+    t.integer  "subject_id",  limit: 4
+    t.integer  "topic_id",    limit: 4
+    t.integer  "chapter_id",  limit: 4
+  end
+
+  create_table "answerkeys", force: :cascade do |t|
+    t.integer  "exam_id",      limit: 4
+    t.integer  "subject_id",   limit: 4
+    t.integer  "topic_id",     limit: 4
+    t.integer  "chapter_id",   limit: 4
+    t.text     "question_ids", limit: 65535
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "answers", force: :cascade do |t|

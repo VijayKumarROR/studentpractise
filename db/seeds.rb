@@ -71,3 +71,8 @@ Answer.create([
 	{id: 19, key_answer: 'Vertical Axis', question_id: 10},
 	{id: 20, key_answer: 'Horizontal Axis', question_id: 10}
 	])
+
+
+Answerkey.destroy_all
+
+Answerkey.create(exam_id: 1, subject_id: 1, topic_id: 1, chapter_id: 1, question_ids: [1,2,3,5,6,7])

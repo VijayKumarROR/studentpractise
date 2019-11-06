@@ -4,15 +4,15 @@ development:
   pool: 5
   database: student_portal_db
   username: root
-  password: root
+  password: vijayroot
 
 
 production:
-  adapter: mysql2
+  adapter: postgresql
   encoding: utf8
   pool: 5
   database: student_portal_pro_db
   username: root
-  password: root
+  password: vijayroot
 
   
