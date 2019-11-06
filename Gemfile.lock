@@ -96,7 +96,7 @@ GEM
     mysql2 (0.4.10)
     nokogiri (1.10.5)
       mini_portile2 (~> 2.4.0)
-    pg (1.1.4)
+    pg (0.21.0)
     popper_js (1.14.5)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -193,7 +193,7 @@ DEPENDENCIES
   jquery-rails
   kaminari
   mysql2 (>= 0.3.13, < 0.5)
-  pg
+  pg (~> 0.18)
   pry
   rails (= 4.2.8)
   rails_12factor
