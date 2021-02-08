@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 
-gem 'carrierwave', '~> 0.9'
+gem 'carrierwave', '~> 1.3'
 
 group :production do
 	gem 'pg', '~> 0.11'
